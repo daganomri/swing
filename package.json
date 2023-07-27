@@ -10,6 +10,14 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^2.8.3"
+    "@astrojs/mdx": "^0.19.7",
+    "@astrojs/netlify": "^2.4.0",
+    "@astrojs/react": "^2.2.1",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "astro": "^2.8.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tablefilter": "^0.7.2"
   }
 }
