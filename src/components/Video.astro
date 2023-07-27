@@ -1,0 +1,104 @@
+---
+// should get a youtube link and display the video
+interface Props {
+  id: string;
+  start?: number;
+  end?: number;
+}
+
+const { id, start, end } = Astro.props;
+const url = new URL(
+  `https://www.youtube.com/embed/${id}?loop=1&playlist=${id}`
+);
+if (start) url.searchParams.set("start", start.toString());
+if (end) url.searchParams.set("end", end.toString());
+
+const src = url.toString();
+const handlePause = `
+  const iframe = document.querySelector('input:checked ~ .iframe-wrapper iframe');
+  iframe.setAttribute('src', iframe.src);
+`;
+---
+
+<div class='video'>
+  <label for={`watch-${id}`}>Watch</label>
+  <input id={`watch-${id}`} type='checkbox' />
+  <label class='backdrop' for={`watch-${id}`} onclick={handlePause}></label>
+  <div class='iframe-wrapper'>
+    <iframe
+      width='200'
+      src={src}
+      title='YouTube video player'
+      frameborder='0'
+      allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; loop'
+      allowfullscreen></iframe>
+  </div>
+</div>
+
+<style>
+  iframe {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+  }
+
+  input:not(:checked) ~ .iframe-wrapper iframe {
+    display: none;
+  }
+
+  .iframe-wrapper {
+    opacity: 0;
+    pointer-events: none;
+
+    position: fixed;
+    width: 75%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  .backdrop {
+    opacity: 0;
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  input:checked ~ .backdrop,
+  input:checked ~ .iframe-wrapper {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  input {
+    display: none;
+  }
+
+  label:not(.backdrop) {
+    cursor: pointer;
+    display: block;
+    width: 100%;
+
+    background-color: var(--primary);
+    border-radius: 5px;
+    padding: 0.5rem 0.25rem;
+    text-align: center;
+    color: var(--background-color);
+
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+      background-color: var(--primary-hover);
+    }
+  }
+</style>
