@@ -1,0 +1,71 @@
+---
+import { getTables } from "@data/airtable";
+import { YouTube } from "astro-lazy-youtube-embed";
+
+const { records } = Astro.props;
+---
+
+<div id='records'>
+  {
+    records?.map(({ fields }: any) => (
+      <article>
+        {fields.videoId ? (
+          <YouTube
+            title={fields.videoTitle ?? fields.move}
+            videoId={fields.videoId}
+          />
+        ) : (
+          <div class='missing-video'>Missing Video</div>
+        )}
+        <dl>
+          <div>
+            <dt>
+              <strong>Move</strong>
+            </dt>
+            <dd>{fields.move}</dd>
+          </div>
+
+          <div>
+            <dt>
+              <strong>Count</strong>
+            </dt>
+            <dd>{fields.count}</dd>
+          </div>
+        </dl>
+      </article>
+    ))
+  }
+</div>
+
+<style>
+  #records {
+    display: grid;
+    gap: 2vmax;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+
+  .missing-video {
+    width: 100%;
+    background-color: var(--muted-color);
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16/9;
+  }
+
+  article {
+    padding: 0;
+    margin: 0;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  dl {
+    padding: 1rem;
+    margin: 0;
+  }
+
+  dt,
+  dd {
+    display: inline;
+  }
+</style>

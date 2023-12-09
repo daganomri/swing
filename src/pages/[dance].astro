@@ -1,0 +1,37 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { getTables } from "@data/airtable";
+import ResultGrid from "./partials/danceResults.astro";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const tables = await getTables();
+  return tables.map(({ name }) => ({
+    params: { dance: name },
+  }));
+}
+
+const { dance } = Astro.params;
+---
+
+<Layout title={`Swing Index - ${dance}`}>
+  <h3>{dance} Moves</h3>
+  <search>
+    <form action={`/${dance}`} method='get'>
+      <input
+        name='q'
+        type='search'
+        value={Astro.url.searchParams.get("q")}
+        hx-trigger='input changed delay:250ms, search'
+        hx-get={`/${dance}`}
+        hx-target='#records'
+        hx-select='#records'
+        placeholder='Search for moves...'
+        hx-swap='outerHTML'
+        hx-push-url='true'
+      />
+    </form>
+  </search>
+  <ResultGrid />
+</Layout>

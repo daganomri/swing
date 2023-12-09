@@ -1,0 +1,18 @@
+---
+import { getTables } from "@data/airtable";
+import Layout from "@layouts/Layout.astro";
+const tables = await getTables();
+const tableNames = tables.map(({ name }) => name);
+---
+
+<Layout title='Swing Index'>
+  <ul>
+    {
+      tableNames.map((name) => (
+        <li>
+          <a href={`/${name}`}>{name} Moves</a>
+        </li>
+      ))
+    }
+  </ul>
+</Layout>
