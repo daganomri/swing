@@ -17,7 +17,7 @@ const { dance } = Astro.params;
 
 <Layout title={`Swing Index - ${dance}`}>
   <h3>{dance} Moves</h3>
-  <search>
+  <search hx-boost='true'>
     <form action={`/${dance}`} method='get'>
       <input
         name='q'
